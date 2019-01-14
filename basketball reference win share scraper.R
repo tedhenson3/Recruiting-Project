@@ -1,62 +1,59 @@
 
 
 setwd("C:/Users/tedhe/Onedrive/Documents/recruiting project")
-thing <- c("https://www.sports-reference.com/cbb/schools/north-carolina/2017.html")
+thing <- c("https://www.sports-reference.com/cbb/players/gary-trentjr-1.html")
+
+#notes on weird player tags for sports reference url#
+#1 Marvin Bagley III = marvin-bagleyiii-1
+#2 Gary Trent Jr. = gary-trentjr-1
+#3 M.J. Walker = mj-walker-1
+#4 Silvio De Sousa = silvio-desousa-1
+#5 Shai Gilgeous-Alexander = shai-gilgeous-alexander-1
+#6 Nickeil Alexander-Walker = nickeil-alexander-walker-1
 
 
 
-vorpscraper <- function(url){
+wsscraper <- function(url){
   
+  library(tidyverse)
+  library(rvest)
+  css_tags <- 'p , h1'
+  stats = url %>%
+    read_html() %>%
+    html_nodes(css=css_tags) %>% html_text()
   
-  
-  url <- readLines(url)
+end <- grepl('School:', stats)
 
-  recordline <- grep('Overall', url)
-  record <- strsplit(url[recordline], '> ', fixed = TRUE)
+real.end <- which(end == T)
+bio.end <- real.end[2]
 
-  record <- record[[1]][2]
-  record <- strsplit(record, '-', fixed = TRUE)
-  record <- record[[1]][1:2]
-  wins <- as.numeric(record[[1]][1])
-  losses <- record[2]
-  losses <- strsplit(losses, ' ', fixed =T)
-  losses <- as.numeric(losses[[1]][1])
-  winpct <- wins / (wins + losses)
-  vorpstart <- grep('data-stat="ws"', url)
-  
-  vorpend<- grep('Conference Per Game', url)
-  if(length(vorpend) != 0){
-    
-  vorpend <- vorpend[1]
+
+bio <- stats[1:bio.end]
+#View(bio)
+
+bio <- gsub("\n", "", bio, fixed = T)
+
+
+end <- grepl('Position:', bio)
+
+real. <- which(end == T)
+bio.end <- real.end[2]
+
+player.data <- data.frame("Name" = bio[1], "Position" = bio[2], "Height.Weight" = bio[3],
+                 "Hometown" = bio[4], "High.School" = bio[5],
+                 "College" = bio[length(bio)])
+
+player.data$Position = gsub("Position:", "", player.data$Position)
+player.data$Hometown = gsub("Hometown:", "", player.data$Hometown)
+player.data$High.School = gsub("High School:", "", player.data$High.School)
+
+player.data$College = gsub("School:", "", player.data$College)
+#player.data$RSCI.Rating = gsub("School:", "", player.data$College)
+
+
+return(player.data)
+
 }
-  
-  if(length(vorpend) == 0){
-    
-    vorpend <- vorpstart[length(vorpstart)]
-  }
-  
-  
+data <- wsscraper(thing)
 
-  
-  
-  vorp <- url[vorpstart[2]:vorpend]
-  players <- grep('data-stat="ws" >', vorp)
-  
-  vorp <- vorp[players[1]:players[length(players)]]
-  vorp <- strsplit(vorp, 'data-stat="ws" >')
-  data <- data.frame(ws = c(0))
-  for(i in c(1:length(vorp))){
-    print(vorp[[i]])
-    ws <- vorp[[i]][2]
-    print(ws)
-    ws <- strsplit(ws, "<", fixed = TRUE)
-    ws <- as.numeric(ws[[1]][1])
-    data[i, "ws"] <- ws
-    
-  }
-  TotalWS <- sum(data$ws)
-  
-  alldata <- data.frame(TotalWS = TotalWS, WinPct = winpct)
-  return(alldata)
-}
-vorpscraper(thing)
+print(data)

@@ -1,0 +1,17 @@
+Log 
+
+
+
+Weekend
+Got 247 scraper working
+basketball reference scraper started
+
+
+January 14
+
+Discovered scraping rivals may be difficult
+Got basketball reference scraper to work for 1 url to get bio info.
+Noted how the urls change based on weird players
+
+
+
