@@ -21,4 +21,9 @@ Scraper for ESPN working for 100 players in 2017 :)
 January 15
 Created player Id's for 247 and espn which link to basketball reference
 Need to create a catch all standard mapping from 247/espn to basketball reference, as of right now there are too many exceptions and not enough rules
+Merge espn and 247 data by name
 #Need to control for a "John Smith" that has been at many different schools, maybe even the same school 
+
+Succesfully merged espn and 247
+#note sometimes player uses jr, sometimes they do not
+#note a name like troy brown could have up to 5 players in cbb reference

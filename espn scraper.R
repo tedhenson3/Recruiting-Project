@@ -95,31 +95,42 @@ first.last <- strsplit(lower.player, ' ')
 
 player.id <- paste(first.last[[1]][1:length(first.last[[1]])], collapse = "-")
 
-print(player.id)
-
-
-  
-
-if(espn.data[i, 'School'] != 'unknown'){
-  
-  
-
-player.ref = paste("https://www.sports-reference.com/cbb/players/", player.id, "-1.html",
-                   sep = "")
-
-  
-  
-if(i > 14){
-  
-
-biodata <-  wsscraper(player.ref)
+espn.data[i, 'player.id'] <- player.id
 }
 
-print(biodata)
-}
+espn.data$bball.ref.link = paste("https://www.sports-reference.com/cbb/players/", espn.data$player.id, "-1.html",
+                                  sep = "")
 
 
-}
+rankings.espn <- espn.data
+
+
+espn.247 <- full_join(rankings.espn, rankings.247, by = "player.id", 
+                      suffix = c(".espn", ".247"))
+
+View(espn.247)
+  
+
+# if(espn.data[i, 'School'] != 'unknown'){
+#   
+#   
+# 
+# player.ref = paste("https://www.sports-reference.com/cbb/players/", player.id, "-1.html",
+#                    sep = "")
+# 
+#   
+#   
+# if(i > 14){
+#   
+# 
+# biodata <-  wsscraper(player.ref)
+# }
+# 
+# print(biodata)
+# }
+# 
+# 
+# }
 
 
 
