@@ -40,7 +40,6 @@ rankings_2018 = pg_url_247 %>%
 
 
 rankings_2018 <- rankings_2018[6:length(rankings_2018)]
-View(rankings_2018)
 
 
 indices <- seq(from = 1, to = length(rankings_2018), by = 10)
@@ -66,15 +65,24 @@ for(i in 1:c(length(indices)-1)){
 }
 
 
-colnames(clean.data) <- c("Previous.Nartional.Ranking", "Name", "Hometown", "Position", 
+colnames(clean.data) <- c("Previous.National.Ranking", "Name", "Hometown", "Position", 
                           "Height.Weight", "Rating", "All Ratings", "National.Ranking",
                           "Position.Ranking", "State.Ranking")
 
-View(clean.data)
 
 
 poslist <- c("PG", "SG", "CG", "SF", "PF", "C")
 
+
+# team.tag = '.png" title="'
+# 
+# 
+# teams = readLines(pg_url_247)
+# 
+# top.50.pos = grep('ViewPath=', teams)
+# 
+# teams <- teams[1:top.50.pos]
+View(teams)
 
 #colnames(clean.data) <- mycolnames
 

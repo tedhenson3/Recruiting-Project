@@ -1,0 +1,19 @@
+Recruiting Project Log
+
+First Weekend
+Got 247 scraper working
+basketball reference scraper started
+
+
+January 14
+
+Discovered scraping rivals may be difficult
+Got basketball reference scraper to work for 1 url to get bio info.
+#Noted how the urls change based on weird players
+
+Got players teams from ESPN site with selector gadget
+Learned the hard lesson again that scraping without selector gadget is probably not worth it! 
+
+Scraper for ESPN working for 100 players in 2017 :)
+#issue fixed for when a player did not go to a school
+
