@@ -70,7 +70,7 @@ colnames(clean.data) <- c("Previous.National.Ranking", "Name", "Hometown", "Posi
                           "Position.Ranking", "State.Ranking")
 
 
-
+View(clean.data)
 poslist <- c("PG", "SG", "CG", "SF", "PF", "C")
 
 
@@ -82,7 +82,7 @@ poslist <- c("PG", "SG", "CG", "SF", "PF", "C")
 # top.50.pos = grep('ViewPath=', teams)
 # 
 # teams <- teams[1:top.50.pos]
-View(teams)
+#View(teams)
 
 #colnames(clean.data) <- mycolnames
 

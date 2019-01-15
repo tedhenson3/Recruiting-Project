@@ -12,23 +12,84 @@ thing <- c("https://www.sports-reference.com/cbb/players/gary-trentjr-1.html")
 #6 Nickeil Alexander-Walker = nickeil-alexander-walker-1
 
 
-
 wsscraper <- function(url){
-  
+  print(url)
   library(tidyverse)
   library(rvest)
+  
+  link <- try(readLines(url))
+  if(class(link) == "try-error"){
+    
+    player.ref <- gsub('-1.html', '-2.html', url)
+    
+      
+  }
+  
+  else{
+    
+    player.ref <- url
+    
+  }
+  
+
   css_tags <- 'p , h1'
-  stats = url %>%
+  stats = player.ref %>%
     read_html() %>%
     html_nodes(css=css_tags) %>% html_text()
+  print(stats)
+  
+  # if(is.na(bio.end)){
+  #   
+  #   url <- gsub('-1.html', '-2.html', url)
+  #   stats = url %>%
+  #     read_html() %>%
+  #     html_nodes(css=css_tags) %>% html_text()
+  #   
+  #   print(stats)
+  #   
+  #   end <- grepl('School:', stats)
+  #   
+  #   real.end <- which(end == T)
+  #   bio.end <- real.end[2]
+  #   
+  # }
+  
+  print(stats)
   
 end <- grepl('School:', stats)
 
 real.end <- which(end == T)
 bio.end <- real.end[2]
+if(!is.na(bio.end)){
+  
+  
+
+
+
+}
+
+else{
+  
+  url <- gsub('-1', 'jr-1', url)
+
+  stats = url %>%
+    read_html() %>%
+    html_nodes(css=css_tags) %>% html_text()
+  
+  print(stats)
+  
+  end <- grepl('School:', stats)
+  
+  real.end <- which(end == T)
+  bio.end <- real.end[2]
+  
+  
+}
+
 
 
 bio <- stats[1:bio.end]
+
 #View(bio)
 
 bio <- gsub("\n", "", bio, fixed = T)

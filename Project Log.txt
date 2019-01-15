@@ -17,3 +17,8 @@ Learned the hard lesson again that scraping without selector gadget is probably 
 Scraper for ESPN working for 100 players in 2017 :)
 #issue fixed for when a player did not go to a school
 
+
+January 15
+Created player Id's for 247 and espn which link to basketball reference
+Need to create a catch all standard mapping from 247/espn to basketball reference, as of right now there are too many exceptions and not enough rules
+#Need to control for a "John Smith" that has been at many different schools, maybe even the same school 
