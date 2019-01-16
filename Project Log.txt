@@ -27,3 +27,16 @@ Merge espn and 247 data by name
 Succesfully merged espn and 247
 #note sometimes player uses jr, sometimes they do not
 #note a name like troy brown could have up to 5 players in cbb reference
+
+
+January 16
+Realized keeping just espn name for now should work.
+completed: need to remove leading blanks in espn.247 dataset
+successfully added basketball reference bio info to dataset
+
+next time: 
+need to get win share info and other stats from bball reference
+try catch part not working (lonnie-walker-1 not being changed to lonnie-walker-2)
+need to return nothing when player has no stats (brian burns ii)
+
+

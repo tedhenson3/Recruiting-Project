@@ -68,9 +68,10 @@ for(i in 1:c(length(indices)-1)){
 
 espn.data <- clean.data
 
+library(stringr)
+espn.data$School <- str_trim(espn.data$School)
 
 for(i in 1:length(espn.data$Name)){
-  
   
 lower.player <- tolower(espn.data[i, 'Name'])
 
@@ -105,11 +106,8 @@ espn.data$bball.ref.link = paste("https://www.sports-reference.com/cbb/players/"
 rankings.espn <- espn.data
 
 
-espn.247 <- full_join(rankings.espn, rankings.247, by = "player.id", 
-                      suffix = c(".espn", ".247"))
 
-View(espn.247)
-  
+
 
 # if(espn.data[i, 'School'] != 'unknown'){
 #   

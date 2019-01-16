@@ -1,7 +1,7 @@
 
 
-setwd("C:/Users/tedhe/Onedrive/Documents/recruiting project")
-thing <- c("https://www.sports-reference.com/cbb/players/gary-trentjr-1.html")
+# setwd("C:/Users/tedhe/Onedrive/Documents/recruiting project")
+# thing <- c("https://www.sports-reference.com/cbb/players/gary-trentjr-1.html")
 
 #notes on weird player tags for sports reference url#
 #1 Marvin Bagley III = marvin-bagleyiii-1
@@ -12,8 +12,24 @@ thing <- c("https://www.sports-reference.com/cbb/players/gary-trentjr-1.html")
 #6 Nickeil Alexander-Walker = nickeil-alexander-walker-1
 
 
-wsscraper <- function(url){
-  print(url)
+wsscraper <- function(data){
+  
+
+  fulldata <- data.frame()
+  for(i in 1:nrow(data)){
+    
+    
+    if(data[i, 'School'] == 'unknown'){
+      
+      
+    }
+    
+  else{
+    
+    
+  
+    
+  url <- data[i, 'bball.ref.link.espn']
   library(tidyverse)
   library(rvest)
   
@@ -36,8 +52,7 @@ wsscraper <- function(url){
   stats = player.ref %>%
     read_html() %>%
     html_nodes(css=css_tags) %>% html_text()
-  print(stats)
-  
+
   # if(is.na(bio.end)){
   #   
   #   url <- gsub('-1.html', '-2.html', url)
@@ -54,8 +69,7 @@ wsscraper <- function(url){
   #   
   # }
   
-  print(stats)
-  
+
 end <- grepl('School:', stats)
 
 real.end <- which(end == T)
@@ -76,8 +90,7 @@ else{
     read_html() %>%
     html_nodes(css=css_tags) %>% html_text()
   
-  print(stats)
-  
+
   end <- grepl('School:', stats)
   
   real.end <- which(end == T)
@@ -112,9 +125,32 @@ player.data$College = gsub("School:", "", player.data$College)
 #player.data$RSCI.Rating = gsub("School:", "", player.data$College)
 
 
-return(player.data)
+player.data$College <- str_trim(player.data$College)
+
+player.data$player.id <- data[i, 'player.id']
+
+
+#colnames(player.data) <- paste('bball.ref', colnames(player.data), sep = ".")
+#need to remove leading blanks in espn dataset
+if(player.data$College == data[i, 'School']){
+
+  
+  lastcol <- as.numeric(ncol(player.data) + length(data[i,]))
+
+
+full.row <- cbind(data[i,], player.data)
+
+
+fulldata <- rbind(fulldata, full.row)
+
 
 }
-data <- wsscraper(thing)
 
-print(data)
+  }
+    View(fulldata)
+  }
+  
+  #return(fulldata)
+  
+}
+  
