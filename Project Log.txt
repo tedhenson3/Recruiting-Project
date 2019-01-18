@@ -29,6 +29,12 @@ Succesfully merged espn and 247
 #note a name like troy brown could have up to 5 players in cbb reference
 
 
+January 15
+Use contains/substring function to match ids from 247 and espn
+
+Use players college to validate that it is the correct player, their state, year, too?
+
+
 January 16
 Realized keeping just espn name for now should work.
 completed: need to remove leading blanks in espn.247 dataset
@@ -38,5 +44,10 @@ next time:
 need to get win share info and other stats from bball reference
 try catch part not working (lonnie-walker-1 not being changed to lonnie-walker-2)
 need to return nothing when player has no stats (brian burns ii)
+
+January 17
+Successfully teased out bad links from good links
+Still need to control for pulling the wrong player (Wendell Carter Jr.)
+
 
 

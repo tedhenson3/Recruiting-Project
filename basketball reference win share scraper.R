@@ -16,36 +16,34 @@ wsscraper <- function(data){
   
 
   fulldata <- data.frame()
+  
+  bad.links <- 0
   for(i in 1:nrow(data)){
     
     
-    if(data[i, 'School'] == 'unknown'){
-      
-      
-    }
-    
-  else{
-    
-    
-  
+    if(data[i, 'School'] != 'unknown'){
     
   url <- data[i, 'bball.ref.link.espn']
   library(tidyverse)
   library(rvest)
-  
   link <- try(readLines(url))
+  
   if(class(link) == "try-error"){
     
-    player.ref <- gsub('-1.html', '-2.html', url)
     
-      
+
+    bad.links <- c(bad.links, url)
+    View(bad.links)
   }
   
   else{
     
+    
+    
+  
+    
     player.ref <- url
     
-  }
   
 
   css_tags <- 'p , h1'
@@ -53,64 +51,25 @@ wsscraper <- function(data){
     read_html() %>%
     html_nodes(css=css_tags) %>% html_text()
 
-  # if(is.na(bio.end)){
-  #   
-  #   url <- gsub('-1.html', '-2.html', url)
-  #   stats = url %>%
-  #     read_html() %>%
-  #     html_nodes(css=css_tags) %>% html_text()
-  #   
-  #   print(stats)
-  #   
-  #   end <- grepl('School:', stats)
-  #   
-  #   real.end <- which(end == T)
-  #   bio.end <- real.end[2]
-  #   
-  # }
-  
-
 end <- grepl('School:', stats)
 
 real.end <- which(end == T)
 bio.end <- real.end[2]
-if(!is.na(bio.end)){
-  
-  
 
 
-
-}
-
-else{
+if(!(is.na(bio.end))){
   
-  url <- gsub('-1', 'jr-1', url)
-
-  stats = url %>%
-    read_html() %>%
-    html_nodes(css=css_tags) %>% html_text()
-  
-
-  end <- grepl('School:', stats)
-  
-  real.end <- which(end == T)
-  bio.end <- real.end[2]
-  
-  
-}
-
 
 
 bio <- stats[1:bio.end]
 
-#View(bio)
 
 bio <- gsub("\n", "", bio, fixed = T)
 
 
 end <- grepl('Position:', bio)
 
-real. <- which(end == T)
+real.end <- which(end == T)
 bio.end <- real.end[2]
 
 player.data <- data.frame("Name" = bio[1], "Position" = bio[2], "Height.Weight" = bio[3],
@@ -147,10 +106,13 @@ fulldata <- rbind(fulldata, full.row)
 }
 
   }
-    View(fulldata)
   }
-  
-  #return(fulldata)
+    }
+  }
+  return(bad.links)
   
 }
+
+  #return(fulldata)
+
   
