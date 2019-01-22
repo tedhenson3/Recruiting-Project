@@ -106,6 +106,7 @@ espn.data$bball.ref.link = paste("https://www.sports-reference.com/cbb/players/"
 rankings.espn <- espn.data
 
 
+write.csv(rankings.espn, file = 'rankings.espn.csv', row.names = F)
 
 
 

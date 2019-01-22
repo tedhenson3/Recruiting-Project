@@ -13,106 +13,152 @@
 
 
 wsscraper <- function(data){
+  source("~/analytics/recruiting project/sports.ref.scraper.R")
   
-
   fulldata <- data.frame()
   
   bad.links <- 0
   for(i in 1:nrow(data)){
     
     
-    if(data[i, 'School'] != 'unknown'){
-    
-  url <- data[i, 'bball.ref.link.espn']
+
+  url <- as.character(data[i, 'bball.ref.link.espn'])
+  
+  # url <- gsub("jaren-jackson", "jaren-jacksonjr", url)
+  # 
+  # url <- gsub("wendell-carter", "wendell-carterjr", url)
   library(tidyverse)
   library(rvest)
   link <- try(readLines(url))
   
-  if(class(link) == "try-error"){
+  if(class(link) != "try-error"){
     
-    
-
-    bad.links <- c(bad.links, url)
-    View(bad.links)
+    bio.data <- sports.ref.scraper(url)
+#bio.data$bball.ref.player.id <- data[i, 'player.id']
   }
-  
-  else{
+
+
+if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
+
+  j <- 2
+  while(j < 10){
+    old.num <- paste(j-1, '.html', sep = "")
+    new.num <- paste(j, '.html', sep = "")
+    url <- gsub(old.num, new.num, url)
+    
+    link <- try(readLines(url))
+    
+    if(class(link) != "try-error"){
+      bio.data <- sports.ref.scraper(url)
+    }
     
     
+    if(grepl(data[i, 'School'], bio.data$College) == T){
+    j <- 10   
+    }
+    if(grepl(data[i, 'School'], bio.data$College) != T){
+   
+        
+      j <- j + 1
+    }
     
-  
     
-    player.ref <- url
-    
-  
-
-  css_tags <- 'p , h1'
-  stats = player.ref %>%
-    read_html() %>%
-    html_nodes(css=css_tags) %>% html_text()
-
-end <- grepl('School:', stats)
-
-real.end <- which(end == T)
-bio.end <- real.end[2]
-
-
-if(!(is.na(bio.end))){
-  
-
-
-bio <- stats[1:bio.end]
-
-
-bio <- gsub("\n", "", bio, fixed = T)
-
-
-end <- grepl('Position:', bio)
-
-real.end <- which(end == T)
-bio.end <- real.end[2]
-
-player.data <- data.frame("Name" = bio[1], "Position" = bio[2], "Height.Weight" = bio[3],
-                 "Hometown" = bio[4], "High.School" = bio[5],
-                 "College" = bio[length(bio)])
-
-player.data$Position = gsub("Position:", "", player.data$Position)
-player.data$Hometown = gsub("Hometown:", "", player.data$Hometown)
-player.data$High.School = gsub("High School:", "", player.data$High.School)
-
-player.data$College = gsub("School:", "", player.data$College)
-#player.data$RSCI.Rating = gsub("School:", "", player.data$College)
-
-
-player.data$College <- str_trim(player.data$College)
-
-player.data$player.id <- data[i, 'player.id']
-
-
-#colnames(player.data) <- paste('bball.ref', colnames(player.data), sep = ".")
-#need to remove leading blanks in espn dataset
-if(player.data$College == data[i, 'School']){
-
-  
-  lastcol <- as.numeric(ncol(player.data) + length(data[i,]))
-
-
-full.row <- cbind(data[i,], player.data)
-
-
-fulldata <- rbind(fulldata, full.row)
-
-
+    }
 }
-
-  }
-  }
+  
+  reset.url <- as.character(data[i, 'bball.ref.link.espn'])
+  
+  
+  if(grepl('jr-1', reset.url) == T){
+    
+    url <- gsub('jr-', '-', reset.url)
+    
+    if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
+      j <- 1
+      while(j < 10){
+        
+        
+        old.num <- paste(j-1, '.html', sep = "")
+        new.num <- paste(j, '.html', sep = "")
+        url <- gsub(old.num, new.num, url)
+        
+        link <- try(readLines(url))
+        
+        if(class(link) != "try-error"){
+          bio.data <- sports.ref.scraper(url)
+        }
+        
+        
+        if(grepl(data[i, 'School'], bio.data$College) == T){
+          j <- 10   
+        }
+        if(grepl(data[i, 'School'], bio.data$College) != T){
+          
+          
+          j <- j + 1
+        }
+        
+        
+      }
     }
   }
-  return(bad.links)
   
+  
+  
+
+  
+  reset.url <- as.character(data[i, 'bball.ref.link.espn'])
+  
+  if(grepl('jr-1', reset.url) != T){
+    
+    url <- gsub('-1.html', 'jr-1.html', reset.url)
+    
+if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
+  j <- 1
+  while(j < 10){
+    
+    
+    old.num <- paste(j-1, '.html', sep = "")
+    new.num <- paste(j, '.html', sep = "")
+    url <- gsub(old.num, new.num, url)
+    
+    link <- try(readLines(url))
+    
+    if(class(link) != "try-error"){
+      bio.data <- sports.ref.scraper(url)
+    }
+    
+    
+    if(grepl(data[i, 'School'], bio.data$College) == T){
+      j <- 10   
+    }
+    if(grepl(data[i, 'School'], bio.data$College) != T){
+      
+      
+      j <- j + 1
+    }
+    
+    
+  }
+}
+  }
+  
+  
+if(bio.data$College == data[i, 'School']){
+lastcol <- as.numeric(ncol(bio.data) + length(data[i,]))
+full.row <- cbind(data[i,], bio.data)
+fulldata <- rbind(fulldata, full.row)
+
 }
 
-  #return(fulldata)
+
+
+
+  }
+  
+  return(fulldata)
+  }
+
+
 
   

@@ -87,6 +87,9 @@ rankings.247 <- clean.data
 
 print(rankings.247)
 
+write.csv(rankings.247, file = 'rankings.247.csv', row.names = F)
+
+
 # team.tag = '.png" title="'
 # 
 # 

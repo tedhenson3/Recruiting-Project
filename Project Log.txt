@@ -49,5 +49,31 @@ January 17
 Successfully teased out bad links from good links
 Still need to control for pulling the wrong player (Wendell Carter Jr.)
 
+January 18
+Made some nice functions. 
+completed: Need to reinitiate link when bball.ref does not have high school (such as a player in 1980)
+
+fixed when there are multiple of a given player
+
+need to fix when the first link does not work, or the name is wrong (jr is in when it shouldn't be)
+
+
+January 20
+fixed issue with a player who transfered
+current issues: sports reference has  "Mississippi State", "Western Kentucky", "UNC", when recruiting dataset has other 
+"Miss. St", "N Carolina", "W Kentucky"
+
+some players have don't have jr when they need it for sports reference
+
+currently getting 70 of 98 players data
+
+January 22
+Fixed issues when a player did or did not have a jr in his name.
+Substituted sume of the team names where appropriate.
+Moving towards grabbing win share stuff.
+
+
+
+
 
 
