@@ -70,7 +70,15 @@ currently getting 70 of 98 players data
 January 22
 Fixed issues when a player did or did not have a jr in his name.
 Substituted sume of the team names where appropriate.
+Need to figure out when name is wrong "Dan" when it needs to be "Daniel"
 Moving towards grabbing win share stuff.
+
+January 23
+Using selector gadget to grab stats aside from the summary and player per game stats may be infeasible, may need to manually scrape..
+
+Make a second name based on the substring
+work on scraper for guys with multiple years
+
 
 
 
