@@ -3,55 +3,65 @@ sexton <- c("https://www.sports-reference.com/cbb/players/theo-pinson-1.html")
 
 library(tidyverse)
 library(rvest)
+library(stringi)
+
 css_tags <- '.p3 div+ div .poptip , .p3 div+ div p'
 
 stats = sexton %>% readLines
 
 
-table.indices <- grep('<div id="all_players_', stats)
-
-c = stri_replace_all_regex(str = table.name, pattern = '\" class', replacement = '" class')
-
-
+# table.indices <- grep('<div id="all_players_', stats)
+# 
+# 
+# 
 # 
 # for(i in 1:length(table.indices)){
 #   start <- table.indices[io]
 #   end  <- table.indices[i+1]
-#   
+# 
 # }
 
-sub.tables <- c('per_game" class', 'totals" class', 'per_min" class', 'per_poss" class', 'advanced" class', 'per_game_conf" class', 'totals_conf" class', 'per_min_conf" class', 'per_poss_conf" class', 'advanced_conf" class')
-for(k in 1:length(sub.tables)-1){
-  
+sub.tables <- c('per_game"', 
+                'totals"', 'per_min"', 'per_poss"',
+                'advanced"', 'per_game_conf"', 
+                'totals_conf"', 'per_min_conf"', 
+                'per_poss_conf"', 
+                'advanced_conf')
+
+data <- data.frame('start.index' = c(0))
+
+for(k in 1:length(sub.tables)){
+
   table.name <- sub.tables[k]
-}
+
+
+
+
+  
+  
+  test.start = stri_replace_all_regex(str = sub.tables[k], pattern = '\"', replacement = '"')
+  
+  test.start <- paste('<div id="all_players_', test.start, sep = "")
+  
+  test.start = stri_replace_all_regex(str = test.start, pattern = '\"', replacement = '"')
   
 
+start.index <- grep(test.start, stats)
+
+data[k, 'start.index'] <- start.index
+
+need <- stats[start.index:length(stats)]
 for(j in 2015:2018){
+
+# end <- strsplit(test.start, "all_")
   
-  
-  c = stri_replace_all_regex(str = table.name, pattern = '\" class', replacement = '" class')
-  
-  test.start <- paste('<div id="all_players_', c, sep = "")
 
-test.start.index <- grep(test.start, stats)
-
-# test.year <- paste('<tr id="players_', c, '.',  j, sep  = '')
-# test.year = stri_replace_all_regex(str = test.year, pattern = '\" class', replacement = '" class')
-# test.year = stri_replace_all_regex(str = test.year, pattern = '\"players', replacement = '"players')
-# 
-
-test.year.index <- grep(test.year, stats)
-# 
-# start.index <- grep(start, stats)
-start <- grep('<div id="all_players_advanced_conf"', stats)
-year <- paste('<tr id="players_advanced_conf.', j, sep = '')
+end <- paste(".", j, sep = "")
+# end = stri_replace_all_regex(str = end, pattern = '\"', replacement = '"')
+end.index <- grep(end, need)
 
 
-end <- grep(year, stats)
-
-
-advanced <- as.character(stats[start:end])
+advanced <- as.character(need[1:end.index[1]])
 
 
 table <- advanced[length(advanced)]
@@ -62,7 +72,6 @@ stat.split <- strsplit(table, "data-stat=")
 next.split <- strsplit(stat.split[[1]], '>', fixed = T)
 
 
-print(next.split)
 
 #career.data <- data.frame()
 mydata <- data.frame()
@@ -95,7 +104,7 @@ for(i in 5:length(next.split)){
  flipped.data[1, stat.name] <- value
   
 row.names(flipped.data) <- NULL
-
+}
 }
 }
 #print(mydata)
