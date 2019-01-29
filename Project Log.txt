@@ -81,6 +81,8 @@ work on scraper for guys with multiple years
 
 
 
+January 23-29
+Stat.Scrape now can scrape every table for a given players reference site
 
 
 
