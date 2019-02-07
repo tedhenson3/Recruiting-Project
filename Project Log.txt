@@ -84,6 +84,13 @@ work on scraper for guys with multiple years
 January 23-29
 Stat.Scrape now can scrape every table for a given players reference site
 
+January 30
+Successfully named each table as a variable named conditionally on what table it represents.
+
+
+February 5
+
+Successfully nested each table and binded it to the bio data in sports ref scraper
 
 
 

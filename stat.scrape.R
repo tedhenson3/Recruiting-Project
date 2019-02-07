@@ -1,5 +1,4 @@
-sexton <- c("https://www.sports-reference.com/cbb/players/theo-pinson-1.html")
-
+sexton <- c("https://www.sports-reference.com/cbb/players/joel-berry-1.html")
 
 library(tidyverse)
 library(rvest)
@@ -21,12 +20,12 @@ stats = sexton %>% readLines
 # 
 # }
 
-sub.tables <- c('per_game"', 
-                'totals"', 'per_min"', 'per_poss"',
-                'advanced"', 'per_game_conf"', 
-                'totals_conf"', 'per_min_conf"', 
-                'per_poss_conf"', 
-                'advanced_conf')
+overall.data <- data.frame()
+sub.tables <- c('per_game', 
+                'totals', 'per_min', 'per_poss',
+                'advanced', 'per_game_conf', 
+                'totals_conf', 'per_min_conf', 
+                'per_poss_conf',  'advanced_conf')
 
 data <- data.frame('start.index' = c(0))
 
@@ -48,16 +47,43 @@ for(k in 1:length(sub.tables)){
 
 start.index <- grep(test.start, stats)
 
+start.index <- start.index[1]
+
 data[k, 'start.index'] <- start.index
 
 need <- stats[start.index:length(stats)]
-for(j in 2015:2018){
+
+my.string = stri_replace_all_regex(str = table.name, pattern = '\"', replacement = '"')
+#print(my.string)
+
+my.ends <- paste('<tr id="players_', my.string, '.', sep = '')
+
+my.ends = stri_replace_all_regex(str = my.ends, pattern = '\"', replacement = '"')
+#print(my.ends)
+
+my.end.indices <- grep(my.ends, need)
+#print(my.end.indices)
+
+
+my.end.indices2 <- my.end.indices[which(my.end.indices < 100)]
+
+
+
+#fresh <- 1
+
+
+for(j in my.end.indices2){
+  need[my.end.indices2]
 
 # end <- strsplit(test.start, "all_")
   
 
 end <- paste(".", j, sep = "")
-# end = stri_replace_all_regex(str = end, pattern = '\"', replacement = '"')
+final.table.name <- paste(table.name, end, sep = "")
+
+final.table.name <- stri_replace_all_regex(pattern = '".20', replacement =  '.20', str = final.table.name)
+
+ end = stri_replace_all_regex(str = end, pattern = '\"', replacement = '"')
 end.index <- grep(end, need)
 
 
@@ -104,8 +130,17 @@ for(i in 5:length(next.split)){
  flipped.data[1, stat.name] <- value
   
 row.names(flipped.data) <- NULL
+
+see <- nest(flipped.data)
+
+assign(final.table.name, flipped.data)
+
+overall.data[c(j-2014),k] <- see
+
+colnames(overall.data)[k] <- table.name
+
 }
 }
 }
+View(overall.data)
 #print(mydata)
-print(flipped.data)
