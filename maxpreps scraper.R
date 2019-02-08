@@ -52,3 +52,5 @@ while(j < 5){
 }
 }
  View(high.school)
+ 
+ write.csv(high.school, file = "maxpreps.sample.csv", row.names = F)
