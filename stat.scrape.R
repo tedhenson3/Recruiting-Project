@@ -1,4 +1,4 @@
-sexton <- c("https://www.sports-reference.com/cbb/players/joel-berry-1.html")
+sexton <- c("https://www.sports-reference.com/cbb/players/luke-maye-1.html")
 
 library(tidyverse)
 library(rvest)
@@ -29,6 +29,8 @@ sub.tables <- c('per_game',
 
 data <- data.frame('start.index' = c(0))
 
+
+
 for(k in 1:length(sub.tables)){
 
   table.name <- sub.tables[k]
@@ -54,15 +56,12 @@ data[k, 'start.index'] <- start.index
 need <- stats[start.index:length(stats)]
 
 my.string = stri_replace_all_regex(str = table.name, pattern = '\"', replacement = '"')
-#print(my.string)
 
 my.ends <- paste('<tr id="players_', my.string, '.', sep = '')
 
 my.ends = stri_replace_all_regex(str = my.ends, pattern = '\"', replacement = '"')
-#print(my.ends)
 
 my.end.indices <- grep(my.ends, need)
-#print(my.end.indices)
 
 
 my.end.indices2 <- my.end.indices[which(my.end.indices < 100)]
@@ -71,26 +70,34 @@ my.end.indices2 <- my.end.indices[which(my.end.indices < 100)]
 
 #fresh <- 1
 
-
-for(j in my.end.indices2){
-  need[my.end.indices2]
+for(j in 1:length(my.end.indices2)){
 
 # end <- strsplit(test.start, "all_")
   
 
-end <- paste(".", j, sep = "")
-final.table.name <- paste(table.name, end, sep = "")
+# end <- paste(".", j, sep = "")
+# final.table.name <- paste(table.name, end, sep = "")
+# 
+# final.table.name <- stri_replace_all_regex(pattern = '".20', replacement =  '.20', str = final.table.name)
+# 
+#  end = stri_replace_all_regex(str = end, pattern = '\"', replacement = '"')
+# end.index <- grep(end, need)
 
-final.table.name <- stri_replace_all_regex(pattern = '".20', replacement =  '.20', str = final.table.name)
+  end <- my.end.indices2[j]
+advanced <- as.character(need[1:end])
 
- end = stri_replace_all_regex(str = end, pattern = '\"', replacement = '"')
-end.index <- grep(end, need)
-
-
-advanced <- as.character(need[1:end.index[1]])
 
 
 table <- advanced[length(advanced)]
+
+
+year <- strsplit(table, ".", fixed = T)
+
+season <- strsplit(year[[1]][2], '\"', fixed = T)
+
+my.season <- season[[1]][1]
+
+
 
 
 stat.split <- strsplit(table, "data-stat=")
@@ -114,33 +121,84 @@ for(i in 5:length(next.split)){
   
   stat.name <- gsub(" ", "", stat.name, fixed = T)
   
+  stat.name <- paste(stat.name, table.name, sep = ".")
   
-  colval1 <- paste('value.', j, sep = '')
+  # colval1 <- paste('value.', my.season, sep = '')
+  # 
+  # 
+  # colval2 <- paste('stat.', my.season, sep = '')
   
-  colval2 <- paste('stat.', j, sep = '')
-  
-  stat.name <- paste(stat.name, j, sep = '')
+  #stat.name <- paste(stat.name, my.season, sep = '.')
     
+  if(grepl("conf", table.name) == T){
+    #colnames(flipped.data) <- paste("conf", colnames(flipped.data), sep = ".")
+    stat.name <- paste(stat.name, "conf", sep = ".")
+    
+  }
   
   value <- as.numeric(gsub("</td", "", mystat, fixed = T))
-  mydata[i-4, colval1] <- value
-  
-  mydata[i-4, colval2] <- stat.name
+  # mydata[i-4, colval1] <- value
+  # 
+  # mydata[i-4, colval2] <- stat.name
   
  flipped.data[1, stat.name] <- value
-  
+ 
+ flipped.data[1, 'season'] <- as.numeric(my.season)
+
 row.names(flipped.data) <- NULL
 
-see <- nest(flipped.data)
 
+
+
+flipped.data <- as.data.frame(flipped.data)
+
+
+#see <- nest(flipped.data)
+
+
+final.table.name <- paste(table.name, my.season, sep = "")
 assign(final.table.name, flipped.data)
+#overall.data[j,k] <- as.data.frame(see)
 
-overall.data[c(j-2014),k] <- see
 
-colnames(overall.data)[k] <- table.name
+
+#colnames(overall.data)[k] <- table.name
+
 
 }
+j <- as.numeric(j)
+
+
+if(k == 1 & j == 1){
+  overall.data <- flipped.data
+  
+
 }
+
+if(k == 1 & j > 1){
+  
+  overall.data <- rbind(flipped.data, overall.data)
+  
+}
+
+if(k > 1 & j == 1){
+  #newrow <- cbind(overall.data[1,], flipped.data)
+  first.data <- flipped.data
+}
+
+if(k > 1 & j < nrow(overall.data)){
+  
+  first.data <- rbind(flipped.data, first.data)
+}
+
+if(k > 1 & j == nrow(overall.data)){
+  
+  overall.data <- cbind(overall.data, first.data)
+}
+
+}
+
+
 }
 View(overall.data)
 #print(mydata)

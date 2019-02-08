@@ -31,4 +31,4 @@ source("~/analytics/recruiting project/basketball reference win share scraper.R"
 espn.247 <- espn.247 %>% filter(!is.na(Name.espn) & School != 'unknown')
 data <- wsscraper(data = espn.247)
 
-write.csv(data, file = 'successfull.scrapes.csv', row.names = F)
+#write.csv(data, file = 'successfull.scrapes.csv', row.names = F)
