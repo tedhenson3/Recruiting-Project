@@ -1,4 +1,4 @@
-#Recruiting Project
+#Recruiting Project#
 I am attempting to predict college performance based on recruiting data and high school statistics.
 This project is supervised research with Dr. Mario Giaccomazo.
 My initial paper will focus only on basketball; however, the code and process will be transferable to other sports such as football.
