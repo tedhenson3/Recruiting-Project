@@ -38,6 +38,7 @@ wsscraper <- function(data){
   }
 
 
+
 if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
 
   j <- 2
@@ -66,6 +67,11 @@ if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error")
     }
 }
   
+
+  
+  
+  if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
+    
   reset.url <- as.character(data[i, 'bball.ref.link.espn'])
   
   
@@ -73,7 +79,6 @@ if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error")
     
     url <- gsub('jr-', '-', reset.url)
     
-    if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
       j <- 1
       while(j < 10){
         
@@ -106,14 +111,14 @@ if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error")
   
   
 
-  
+  if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
+    
   reset.url <- as.character(data[i, 'bball.ref.link.espn'])
   
   if(grepl('jr-1', reset.url) != T){
     
     url <- gsub('-1.html', 'jr-1.html', reset.url)
     
-if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error"){
   j <- 1
   while(j < 10){
     
@@ -143,8 +148,15 @@ if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error")
 }
   }
   
+  if(grepl(data[i, 'School'], bio.data$College) == T){
+    
+    data[i, 'link'] <- url
+    print(url)
+  }
   
-if(bio.data$College == data[i, 'School']){
+  
+  if(grepl(data[i, 'School'], bio.data$College) == T){
+    
 lastcol <- as.numeric(ncol(bio.data) + length(data[i,]))
 full.row <- cbind(data[i,], bio.data)
 fulldata <- rbind(fulldata, full.row)
