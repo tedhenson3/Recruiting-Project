@@ -1,4 +1,4 @@
-espn <- c('http://www.espn.com/college-sports/basketball/recruiting/playerrankings/_/class/2017/order/true')
+#espn <- c('http://www.espn.com/college-sports/basketball/recruiting/playerrankings/_/class/2017/order/true')
 
 # css_tags <- 'td'
 # rankings_2018 = espn %>%
@@ -7,14 +7,43 @@ espn <- c('http://www.espn.com/college-sports/basketball/recruiting/playerrankin
 
 #View(rankings_2018)
 
+my.states <- tolower(state.name)
+
+my.states <- gsub(" ", "-", my.states, fixed = T)
+
 library(rvest)
 library(tidyverse)
 
+library(tidyverse)
+library(rvest)
+
+r <- 1
+while(r <  length(my.states)){
+
+  state <- my.states[r]
+  
+espn <- paste('http://www.espn.com/college-sports/basketball/recruiting/playerrankings/_/class/2017/view/state/order/true/state/', 
+              state, sep = "")
+  
 css_tags.2 = 'td:nth-child(1) , .colhead td , .school-name , td:nth-child(8) , td:nth-child(6) , td:nth-child(5) , b , td:nth-child(4) , strong'
 rankings_2018 = espn %>%
   read_html() %>%
   html_nodes(css=css_tags.2) %>% html_text()
 #View(rankings_2018)
+
+print(state)
+print(r / 50 * 100)
+if(length(rankings_2018) < 18 | length(rankings_2018) == 0){
+  
+
+}
+
+else{
+  
+  
+  
+ 
+
 
 rankings_2018 <- rankings_2018[10:length(rankings_2018)]
 
@@ -46,7 +75,6 @@ for(i in 1:c(length(indices)-1)){
   
 
     
-  
   
   row <- rankings_2018[start:end]
   
@@ -103,38 +131,27 @@ espn.data$bball.ref.link = paste("https://www.sports-reference.com/cbb/players/"
                                   sep = "")
 
 
+if(r == 1){
+  
+  
+
 rankings.espn <- espn.data
 
+}
 
-write.csv(rankings.espn, file = 'rankings.espn.csv', row.names = F)
+if(r > 1) {
+  
+  rankings.espn <- rbind(rankings.espn, espn.data)
+}
 
-
-
-# if(espn.data[i, 'School'] != 'unknown'){
-#   
-#   
-# 
-# player.ref = paste("https://www.sports-reference.com/cbb/players/", player.id, "-1.html",
-#                    sep = "")
-# 
-#   
-#   
-# if(i > 14){
-#   
-# 
-# biodata <-  wsscraper(player.ref)
-# }
-# 
-# print(biodata)
-# }
-# 
-# 
-# }
+}
+r <- r + 1
 
 
 
+}
+
+View(rankings.espn)
 
 
-
-#poslist <- c("PG", "SG", "CG", "SF", "PF", "C")
-
+write.csv(rankings.espn, file = 'espn.top.state.2017.csv', row.names = F)

@@ -1,5 +1,15 @@
 sexton <- c("https://www.sports-reference.com/cbb/players/luke-maye-1.html")
 
+setwd("~/analytics/recruiting project")
+
+library(readr)
+players <- read_csv(file = "successfull.scrapes.csv")
+for(y in 1:length(players$link)){
+  
+  
+  sexton <- players$link[y]
+
+
 library(tidyverse)
 library(rvest)
 library(stringi)
@@ -20,14 +30,31 @@ stats = sexton %>% readLines
 # 
 # }
 
-overall.data <- data.frame()
-sub.tables <- c('per_game', 
-                'totals', 'per_min', 'per_poss',
-                'advanced', 'per_game_conf', 
-                'totals_conf', 'per_min_conf', 
-                'per_poss_conf',  'advanced_conf')
+
 
 data <- data.frame('start.index' = c(0))
+
+if(length(grep("per_game", stats)) != 0){
+  
+  
+  
+
+if(length(grep("per_game_conf", stats)) == 0){
+  
+  sub.tables <- c('per_game', 
+                  'totals', 'per_min', 'per_poss',
+                  'advanced')
+  
+}
+
+else{
+  sub.tables <- c('per_game', 
+                  'totals', 'per_min', 'per_poss',
+                  'advanced', 'per_game_conf', 
+                  'totals_conf', 'per_min_conf', 
+                  'per_poss_conf',  'advanced_conf')
+  
+}
 
 
 
@@ -65,7 +92,6 @@ my.end.indices <- grep(my.ends, need)
 
 
 my.end.indices2 <- my.end.indices[which(my.end.indices < 100)]
-
 
 
 #fresh <- 1
@@ -110,8 +136,8 @@ next.split <- strsplit(stat.split[[1]], '>', fixed = T)
 mydata <- data.frame()
 
 flipped.data <- data.frame()
+
 for(i in 5:length(next.split)){
-  
   
   mystat <- next.split[[i]][2]
   
@@ -121,7 +147,12 @@ for(i in 5:length(next.split)){
   
   stat.name <- gsub(" ", "", stat.name, fixed = T)
   
-  stat.name <- paste(stat.name, table.name, sep = ".")
+  # if(y == 1){
+  #   
+  #   print(stat.name)
+  # }
+  # 
+  # stat.name <- paste(stat.name, table.name, sep = ".")
   
   # colval1 <- paste('value.', my.season, sep = '')
   # 
@@ -143,7 +174,6 @@ for(i in 5:length(next.split)){
   
  flipped.data[1, stat.name] <- value
  
- flipped.data[1, 'season'] <- as.numeric(my.season)
 
 row.names(flipped.data) <- NULL
 
@@ -151,6 +181,11 @@ row.names(flipped.data) <- NULL
 
 
 flipped.data <- as.data.frame(flipped.data)
+# flipped.data$Name <- players$Name[y]
+# flipped.data$Season <- my.season
+flipped.data$Season <- as.numeric(my.season)
+# flipped.data$Name <- players$link[y]
+
 
 
 #see <- nest(flipped.data)
@@ -166,39 +201,91 @@ assign(final.table.name, flipped.data)
 
 
 }
-j <- as.numeric(j)
 
 
-if(k == 1 & j == 1){
-  overall.data <- flipped.data
+if(j == 1){
+  all.seasons <- flipped.data
   
 
 }
 
-if(k == 1 & j > 1){
+if(j > 1){
   
-  overall.data <- rbind(flipped.data, overall.data)
-  
+  all.seasons <- rbind(flipped.data, all.seasons)
+ 
+ 
+
 }
 
-if(k > 1 & j == 1){
+}
+# if(k > 1 & j == 1){
+#   #newrow <- cbind(overall.data[1,], flipped.data)
+#   first.data <- flipped.data
+# }
+# 
+# if(k > 1 & j < nrow(overall.data)){
+#   
+#   first.data <- rbind(flipped.data, first.data)
+# }
+# 
+# if(k > 1 & j == nrow(overall.data)){
+#   
+#   overall.data <- cbind(overall.data, first.data)
+#   overall.data$Name <- players$Name.espn[y]
+#   View(overall.data)
+#   
+# }
+
+if(k == 1){
   #newrow <- cbind(overall.data[1,], flipped.data)
-  first.data <- flipped.data
-}
-
-if(k > 1 & j < nrow(overall.data)){
+  overall.data <- all.seasons
   
-  first.data <- rbind(flipped.data, first.data)
-}
-
-if(k > 1 & j == nrow(overall.data)){
   
-  overall.data <- cbind(overall.data, first.data)
 }
+
+if(k > 1){
+
+  
+  overall.data <- cbind(overall.data, all.seasons)
+}
+
+
+}
+
+  
+  overall.data <- overall.data[, !duplicated(colnames(overall.data))]
+  
+  overall.data$Name <- players$Name[y]
+  
+
+  
+if(y == 1){
+  
+  college.stats <- overall.data
+
+  
+}
+
+else {
+
+  
+  library(plyr)
+  college.stats <- rbind.fill(college.stats, overall.data)
+  
+  college.stats <- college.stats %>% select(Name, Season, everything())
+  
+
+
+  
+  
+  
+}
+}
+
 
 }
 
 
-}
-View(overall.data)
+#write.csv(college.stats, file = 'bball.ref.data.csv')
+#View(college.stats)
 #print(mydata)

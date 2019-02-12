@@ -1,3 +1,4 @@
+setwd("~/analytics/recruiting project")
 maxpreps <- c("http://www.maxpreps.com/leaders/basketball-winter-16-17/,scoring/alaska/stat-leaders-2.htm?classyear=all&position=all")
 
 #vector of state names: state.name
@@ -135,7 +136,7 @@ while(r <  length(my.states)){
     
   }
   
-  
+write.csv(all.stats, file = )
 
 
 # 
