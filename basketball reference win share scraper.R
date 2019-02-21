@@ -151,7 +151,6 @@ if(grepl(data[i, 'School'], bio.data$College) != T | class(link) == "try-error")
   if(grepl(data[i, 'School'], bio.data$College) == T){
     
     data[i, 'link'] <- url
-    print(url)
   }
   
   

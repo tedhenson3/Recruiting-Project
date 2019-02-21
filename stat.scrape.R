@@ -1,9 +1,9 @@
-sexton <- c("https://www.sports-reference.com/cbb/players/luke-maye-1.html")
+#sexton <- c("https://www.sports-reference.com/cbb/players/luke-maye-1.html")
 
 setwd("~/analytics/recruiting project")
 
 library(readr)
-players <- read_csv(file = "successfull.scrapes.csv")
+players <- read_csv(file = "successfull.scrapes.2.csv")
 for(y in 1:length(players$link)){
   
   
@@ -286,6 +286,5 @@ else {
 }
 
 
-#write.csv(college.stats, file = 'bball.ref.data.csv')
-#View(college.stats)
-#print(mydata)
+write.csv(college.stats, file = 'bball.ref.data.part2.csv')
+View(college.stats)
