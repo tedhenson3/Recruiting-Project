@@ -4,7 +4,7 @@ library(tidyverse)
 
 library(readr)
 setwd("~/analytics/recruiting project")
-preps = read_csv(file = 'prep.circuit.teams.15-16.csv')
+preps = read_csv(file = 'prep.circuit.teams.16-17.csv')
 preps = preps$x
 for(i in 1:length(preps)){
   img.actual = preps[i]
@@ -52,17 +52,28 @@ team.stat.tables = player.stats %>%
 
 for(e in 1:length(team.stat.tables)){
   
-  
+  colnames(team.stat.tables[[e]])[colnames(team.stat.tables[[e]]) == 'GP'] <-  paste('gp', e, sep = '.')
   if(e == 1){
     
     finish = team.stat.tables[[e]]
     
+
   }
   else{
     
     
   
-  finish = full_join(x = finish, y = team.stat.tables[[e]])
+other.table = team.stat.tables[[e]]
+
+
+
+
+other.table = other.table[,2:ncol(other.table)]
+
+
+  finish = full_join(x = finish, y = other.table,
+                     by = 'Name')
+  
   #print(finish)
   }
   
@@ -72,6 +83,7 @@ for(e in 1:length(team.stat.tables)){
 if(exists("players") == T){
   
   ted = finish
+  #print(ted)
   #ted = as.data.frame(team.stat.tables[[1]])
   library(plyr)
   players = rbind.fill(players, ted)
@@ -99,5 +111,5 @@ players = finish
 
 
 
-write.csv(players, file = 'prep.circuit.players.stats.csv')
+write.csv(players, file = 'prep.circuit.players.stats.16-17.csv', row.names = FALSE)
 

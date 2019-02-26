@@ -1,4 +1,6 @@
-prep <- c("https://www.prepcircuit.com/stats/league_instance/34558?subseason=245525")
+prep.15.16 <- c("https://www.prepcircuit.com/stats/league_instance/34558?subseason=245525")
+
+prep <- c("https://www.prepcircuit.com/stats/league_instance/47994?subseason=336137")
 
 
 library(RSelenium)
@@ -69,4 +71,4 @@ i = i + 1
 unique.teams <- unique(all.teams)
 
 
-write.csv(unique.teams, file = 'prep.circuit.teams.15-16.csv', row.names = F)
+write.csv(unique.teams, file = 'prep.circuit.teams.16-17.csv', row.names = F)
