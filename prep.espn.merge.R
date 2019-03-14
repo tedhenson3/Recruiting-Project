@@ -11,6 +11,11 @@ espn <- read_csv("espn.top.state.2017.csv")
 
 library(tidyverse)
 
+espn$Name = gsub("Jaren Jackson", "Jaren Jackson Jr.", espn$Name)
+
+espn$Name = gsub("D.J. Harvey Jr.", "DJ Harvey", espn$Name)
+
+
 espn$Name <- trimws(espn$Name,  which = 'both')
 
 prep$Name <- trimws(prep$Name, which = 'both')
@@ -70,15 +75,13 @@ lower.player = gsub("\\s+", "-", lower.player)
 
 prep$player.id = lower.player
 
-fresh <- inner_join(espn, prep,
+
+fresh <- anti_join(espn, prep,
                    by = 'player.id')
 
 
-nrow(fresh)
-nrow(espn)
 
 weird = prep[which(grepl('porterjr', prep$player.id)),]
-print(weird$player.id)
 
 espn_top_state_2017 <- read_csv("espn.top.state.2017.csv")
 

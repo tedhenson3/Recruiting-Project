@@ -22,7 +22,7 @@ while(r <  length(my.states)){
 
   state <- my.states[r]
   
-espn <- paste('http://www.espn.com/college-sports/basketball/recruiting/playerrankings/_/class/2017/view/state/order/true/state/', 
+espn <- paste('http://www.espn.com/college-sports/basketball/recruiting/playerrankings/_/class/2015/view/state/order/true/state/', 
               state, sep = "")
   
 css_tags.2 = 'td:nth-child(1) , .colhead td , .school-name , td:nth-child(8) , td:nth-child(6) , td:nth-child(5) , b , td:nth-child(4) , strong'
@@ -153,5 +153,22 @@ r <- r + 1
 
 View(rankings.espn)
 
+espn = rankings.espn
 
-write.csv(rankings.espn, file = 'espn.top.state.2017.csv', row.names = F)
+
+espn.247$Name = gsub("Ray Robinson", "Raynard Robinson", espn.247$Name)
+
+espn.247$Name = gsub("Jagan Mosley", "Jagan Mosely", espn.247$Name)
+
+
+espn.247$Name = gsub("Jeremy Carter-Sheppard", "Jeremy Sheppard", espn.247$Name)
+
+espn.247$Name = gsub("Ryan Swan", "Ryan Swan-Ford", espn.247$Name)
+
+espn.247$Name = gsub("Jaekwon Carlisle", "Jaekwon Carliyle", espn.247$Name)
+
+
+
+
+
+write.csv(espn, file = 'test.csv', row.names = F)

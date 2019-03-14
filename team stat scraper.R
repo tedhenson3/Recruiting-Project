@@ -6,6 +6,8 @@ library(readr)
 setwd("~/analytics/recruiting project")
 preps = read_csv(file = 'prep.circuit.teams.16-17.csv')
 preps = preps$x
+
+badlinks = c()
 for(i in 1:length(preps)){
   img.actual = preps[i]
   
@@ -17,6 +19,13 @@ stats = img.actual %>%
   readLines()
 
 test = grep('remote-tool-tab', stats)
+
+if(length(test) == 0){
+  
+  badlinks = c(badlinks, img.actual)
+  print(badlinks)
+  
+}
 
 if(length(test) != 0){
   
@@ -111,5 +120,5 @@ players = finish
 
 
 
-write.csv(players, file = 'prep.circuit.players.stats.16-17.csv', row.names = FALSE)
+#write.csv(badlinks, file = 'prep.circuit.badlinks.csv', row.names = FALSE)
 

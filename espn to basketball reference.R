@@ -15,7 +15,77 @@ library(readr)
 #ask Dr Mario what to do
 
 
-espn.247 <- read_csv(file = 'espn.top.state.2017.csv')
+espn.247 <- read_csv(file = 'espn.top.state.2015.csv')
+
+
+espn.247$School = gsub('San Jos\xe9 St', 'San Jose State', espn.247$School)
+
+
+espn.247$School = gsub('W Michichan', "Western Michigan", espn.247$School)
+
+espn.247$School <- gsub("Oklahoma St", "Oklahoma State", espn.247$School)
+espn.247$Name = gsub("Ray Robinson", "Raynard Robinson", espn.247$Name)
+
+espn.247$Name = gsub("Jagan Mosley", "Jagan Mosely", espn.247$Name)
+
+
+espn.247$Name = gsub("Jeremy Carter-Sheppard", "Jeremy Sheppard", espn.247$Name)
+
+espn.247$Name = gsub("Ryan Swan", "Ryan Swan-Ford", espn.247$Name)
+
+espn.247$Name = gsub("Jaekwon Carlisle", "Jaekwon Carliyle", espn.247$Name)
+
+
+
+
+
+ 
+espn.247$School <- gsub("North Carolina", "UNC", espn.247$School)
+
+espn.247$School <- gsub("S Carolina", "South Carolina", espn.247$School)
+
+
+espn.247$School <- gsub("Miss. St", "Mississippi State", espn.247$School)
+
+espn.247$School <- gsub("W Kentucky", "Western Kentucky", espn.247$School)
+
+espn.247$School <- gsub("W Kentucky", "Western Kentucky", espn.247$School)
+
+
+
+espn.247$School <- gsub("East Tennessee State", "ETSU", espn.247$School)
+
+
+espn.247$School = gsub("G. Washington", "George Washington", espn.247$School)
+
+espn.247$School = gsub("St. Francis (BKN)", "St. Francis (NY)", espn.247$School)
+
+espn.247$School = gsub("St Mary's", "Saint Mary's", espn.247$School)
+
+
+
+espn.247$School = gsub("Nrthwestrn", "Northwestern", espn.247$School)
+
+espn.247$School =  gsub("LIU Brooklyn", "LIU-Brooklyn", espn.247$School)
+
+espn.247$School = gsub('Cent Connecticut', 'Central Connecticut')
+
+espn.247$School = gsub('UC Santa Barbara', 'UCSB', espn.247$School)
+
+
+espn.247$bball.ref.link.espn = gsub('https://www.sports-reference.com/cbb/players/trevor-manuel-1.html',
+                                    'https://www.sports-reference.com/cbb/players/trevor-manual-1.html',
+                                    espn.247$bball.ref.link.espn)
+#https://www.sports-reference.com/cbb/players/pierfrancesco-oliva-1.html
+
+#https://www.sports-reference.com/cbb/players/xeryius-williams-1.html
+
+espn.247$Name = gsub('Donte Fitzpatrick', 'Donte Fitzpatrick-Dorsey', espn.247$Name)
+
+espn.247$Name = gsub('St. Francis (PA)', 'Saint Francis (PA)', espn.247$School)
+
+espn.247$School = gsub('N Illinois', "NIU", espn.247$School)
+
 
 espn.247$School <- ifelse(substr(espn.247$School, 
                                  nchar(espn.247$School)-1, 
@@ -41,39 +111,24 @@ espn.247$School <- ifelse(substr(espn.247$School,
                                  1, 
                                  2) == 'S ', 
                           gsub("S ", "South ", espn.247$School), espn.247$School)
- 
-espn.247$School <- gsub("North Carolina", "UNC", espn.247$School)
-
-espn.247$School <- gsub("S Carolina", "South Carolina", espn.247$School)
-
-
-espn.247$School <- gsub("Miss. St", "Mississippi State", espn.247$School)
-
-espn.247$School <- gsub("W Kentucky", "Western Kentucky", espn.247$School)
-
-espn.247$School <- gsub("W Kentucky", "Western Kentucky", espn.247$School)
-
-espn.247$School <- gsub("Oklahoma St", "Oklahoma State", espn.247$School)
-
-
-
 
 unique(espn.247$School)
 
 
-
-rownames(espn.247) <- NULL
-colnames(espn.247) <- paste(colnames(espn.247), 'espn', sep = ".")
-
-colnames(espn.247) <- gsub("School.espn", "School", colnames(espn.247))
-
 library(tidyverse)
+
+
+#Loyola (MD) issue
 #View(espn.247)
 
 source("~/analytics/recruiting project/basketball reference win share scraper.R")
 
-espn.247 <- espn.247 %>% filter(!is.na(Name.espn) & School != 'unknown')
+espn.247 <- espn.247 %>% filter(!is.na(Name) & School != 'unknown')
+
+rownames(espn.247) <- NULL
+colnames(espn.247)[10] <- paste(colnames(espn.247)[10], 'espn', sep = ".")
+
 
 basketballdata <- wsscraper(data = espn.247)
 
-write.csv(basketballdata, file = 'successfull.scrapes.2.csv', row.names = F)
+write.csv(basketballdata, file = 'test.csv', row.names = F)

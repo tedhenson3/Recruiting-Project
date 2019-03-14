@@ -1,14 +1,24 @@
 #sexton <- c("https://www.sports-reference.com/cbb/players/luke-maye-1.html")
 
 setwd("~/analytics/recruiting project")
-
+library(rowr)
 library(readr)
-players <- read_csv(file = "successfull.scrapes.2.csv")
+library(plyr)
+players <- read_csv(file = "successfull.scrapes.17.csv")
 for(y in 1:length(players$link)){
   
   
-  sexton <- players$link[y]
 
+
+  sexton <- players$link[y]
+  
+  if(sexton != 'https://www.sports-reference.com/cbb/players/ogugua-anunobyjr-1.html'){
+    
+    
+    
+player.id = strsplit(sexton, ".html")
+player.id = strsplit(player.id[[1]][1], '/', fixed = T)
+player.id = player.id[[1]][6]
 
 library(tidyverse)
 library(rvest)
@@ -79,6 +89,10 @@ start.index <- grep(test.start, stats)
 start.index <- start.index[1]
 
 data[k, 'start.index'] <- start.index
+
+if(!is.na(start.index)){
+  
+  
 
 need <- stats[start.index:length(stats)]
 
@@ -181,10 +195,8 @@ row.names(flipped.data) <- NULL
 
 
 flipped.data <- as.data.frame(flipped.data)
-# flipped.data$Name <- players$Name[y]
-# flipped.data$Season <- my.season
+
 flipped.data$Season <- as.numeric(my.season)
-# flipped.data$Name <- players$link[y]
 
 
 
@@ -211,80 +223,75 @@ if(j == 1){
 
 if(j > 1){
   
-  all.seasons <- rbind(flipped.data, all.seasons)
+  all.seasons <- rbind.fill(flipped.data, all.seasons)
  
  
 
 }
 
 }
-# if(k > 1 & j == 1){
-#   #newrow <- cbind(overall.data[1,], flipped.data)
-#   first.data <- flipped.data
-# }
-# 
-# if(k > 1 & j < nrow(overall.data)){
-#   
-#   first.data <- rbind(flipped.data, first.data)
-# }
-# 
-# if(k > 1 & j == nrow(overall.data)){
-#   
-#   overall.data <- cbind(overall.data, first.data)
-#   overall.data$Name <- players$Name.espn[y]
-#   View(overall.data)
-#   
-# }
+
+all.seasons$Name = players$Name[y]
+
+all.seasons$player.id = player.id
+
+all.seasons$link = sexton
+
+
 
 if(k == 1){
-  #newrow <- cbind(overall.data[1,], flipped.data)
   overall.data <- all.seasons
-  
+
   
 }
 
 if(k > 1){
 
-  
-  overall.data <- cbind(overall.data, all.seasons)
-}
 
-
-}
-
+  #redo one of these if it messes up
+  overall.data <- cbind.fill(overall.data, all.seasons)
+  #overall.data <- cbind(overall.data, all.seasons)
   
   overall.data <- overall.data[, !duplicated(colnames(overall.data))]
   
-  overall.data$Name <- players$Name[y]
+  overall.data <- overall.data %>% select(Name, Season, everything())
+  
+  
+}
+
+
+}
+
   
 
+}
+  
   
 if(y == 1){
   
+  
+  
   college.stats <- overall.data
+
 
   
 }
 
 else {
 
-  
-  library(plyr)
-  college.stats <- rbind.fill(college.stats, overall.data)
+  college.stats = rbind.fill(college.stats, overall.data)
   
   college.stats <- college.stats %>% select(Name, Season, everything())
-  
 
 
+
   
-  
-  
-}
 }
 
 
 }
+  }
+}
 
 
-write.csv(college.stats, file = 'bball.ref.data.part2.csv')
-View(college.stats)
+write.csv(college.stats, file = 'test.17.csv', row.names = F)
