@@ -4,10 +4,25 @@
 
 
 
+poslist <- c("PG", "SG", "CG", "SF", "PF", "C")
 
-pg_url_247 <- c("https://247sports.com/Season/2017-Basketball/CompositeRecruitRankings/?InstitutionGroup=highschool&Position=PG")
+season.list = c(2015, 2016, 2017)
 
-url_247 <- c("https://247sports.com/Season/2017-Basketball/CompositeRecruitRankings/?InstitutionGroup=highschool")
+for(q in 1:length(season.list)){
+  
+  
+
+for(r in 1:length(poslist)){
+  
+  
+
+
+url_247 <- paste("https://247sports.com/Season/", season.list[q], "-Basketball/RecruitRankings/?InstitutionGroup=highschool&Position=", 
+                 poslist[r], sep = "")
+
+
+
+#url_247 <- c("https://247sports.com/Season/2017-Basketball/CompositeRecruitRankings/?InstitutionGroup=highschool")
 
 
 library(tidyverse)
@@ -77,17 +92,30 @@ first.last <- strsplit(lower.player, ' ')
 
 clean.data[i, 'player.id'] <- paste(first.last[[1]][1:length(first.last[[1]])], collapse = "-")
 
+
 }
-poslist <- c("PG", "SG", "CG", "SF", "PF", "C")
 
-clean.data$bball.ref.link = paste("https://www.sports-reference.com/cbb/players/", clean.data$player.id, "-1.html",
-                   sep = "")
+clean.data$Season = season.list[q]
 
-rankings.247 <- clean.data
+if(r == 1 & q == 1){
+  rankings.247 <- clean.data
+  
+  
+}
 
-print(rankings.247)
+else{
+library(plyr)
+  
+  rankings.247 = rbind.fill(rankings.247, clean.data)
+}
 
-write.csv(rankings.247, file = 'rankings.247.csv', row.names = F)
+}
+}
+
+
+View(rankings.247)
+
+write.csv(rankings.247, file = 'rankings.247.raw.csv', row.names = F)
 
 
 # team.tag = '.png" title="'

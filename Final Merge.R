@@ -40,9 +40,25 @@ return(player.id)
 espn.total$player.id = sapply(espn.total$link, FUN = id.fix)
 
 library(tidyverse)
-total.data = inner_join(espn.total, bball.ref.total, by = 'player.id')
+total.data = merge(espn.total, bball.ref.total)
 
-write.csv(total.data, file = 'recruit.college.15-17.csv')
+
+#total.data = total.data[sort(total.data$Rating, decreasing = F),]
+
+total.data = total.data %>% arrange(desc(Rating))
+
+total.data = total.data %>% select(Name, Rating, ws, ws.conf, ws_per_40, ws_per_40.conf,
+                                   everything())
+
+
+write.csv(total.data, file = 'recruit.college.15-17.csv', row.names = F)
+
+
+# preview = total.data[1:30,]
+# 
+# View(preview)
+
+
 
 length(unique(total.data$Name.x))
 

@@ -22,7 +22,7 @@ while(r <  length(my.states)){
 
   state <- my.states[r]
   
-espn <- paste('http://www.espn.com/college-sports/basketball/recruiting/playerrankings/_/class/2015/view/state/order/true/state/', 
+espn <- paste('http://www.espn.com/college-sports/basketball/recruiting/playerrankings/_/class/2014/view/state/order/true/state/', 
               state, sep = "")
   
 css_tags.2 = 'td:nth-child(1) , .colhead td , .school-name , td:nth-child(8) , td:nth-child(6) , td:nth-child(5) , b , td:nth-child(4) , strong'

@@ -1,0 +1,308 @@
+
+
+
+#load in readr to easily load in csvs
+library(readr)
+
+#read in tidyverse package for easy data manipulation
+library(tidyverse)
+
+#read in caret package for different model and resampling methods
+library(caret)
+
+#read in ggplot2 package for data visualization of model performance
+library(ggplot2)
+setwd('~/analytics/recruiting project')
+data <- read_csv("recruit.college.15-17.csv")
+rankings.247 = read_csv("rankings.247.csv")
+
+# maxpreps = read_csv("maxpreps.16-17.csv")
+# 
+# maxpreps = maxpreps %>% dplyr::select(Name, PPG, Pts)
+# 
+# colnames(maxpreps)[2] = 'maxpreps.ppg'
+# 
+# colnames(maxpreps)[3] = 'maxpreps.pts'
+
+
+rankings.247$dif = as.numeric(rankings.247$National.Ranking) - 
+  as.numeric(rankings.247$Previous.National.Ranking)
+
+colnames(rankings.247)[colnames(rankings.247) == 'Rating'] <- 'rating.247'
+
+
+
+colnames(data)[colnames(data) == 'Rating'] <- 'espn.rating'
+
+
+
+data <- data %>% dplyr::filter(mp_per_g > 10)
+
+data <- data %>% dplyr::filter(g > 10)
+
+
+data = data %>% dplyr::arrange(Name, Season)
+
+data = data[!duplicated(data$Name),]
+
+feet = as.numeric(substr(data$Height, 1, 1))
+
+inches = as.numeric(gsub("'", "", substr(data$Height, 3, 4)))
+
+data$fixed.height = (feet*12) + inches
+
+data = data[which(!is.na(data$Weight)),]
+
+
+data = data %>% dplyr::arrange(desc(ws))
+
+
+data = left_join(x = data, y = rankings.247, by = c('Name'))
+
+prep_circuit <- read_csv("prep.circuit.players.stats.16-17.csv")
+
+prep_circuit$ppg.prep = ifelse(!is.na(prep_circuit$PPG), 
+                               prep_circuit$PPG,
+                               ifelse(!is.na(prep_circuit$PPG.x), 
+                                      prep_circuit$PPG.x,
+                                      prep_circuit$PPG.y))
+
+prep_circuit$reb.prep = ifelse(!is.na(prep_circuit$OFF), 
+                               prep_circuit$OFF,
+                               ifelse(!is.na(prep_circuit$OFF.x), 
+                                      prep_circuit$OFF.x,
+                                      prep_circuit$OFF.y))
+
+prep_circuit$ast.prep = ifelse(!is.na(prep_circuit$AST), 
+                               prep_circuit$AST,
+                               ifelse(!is.na(prep_circuit$AST.x), 
+                                      prep_circuit$AST.x,
+                                      prep_circuit$AST.y)) / prep_circuit$gp.2
+
+prep_circuit$steals.prep = ifelse(!is.na(prep_circuit$STL), 
+                               prep_circuit$STL,
+                               ifelse(!is.na(prep_circuit$STL.x), 
+                                      prep_circuit$STL.x,
+                                      prep_circuit$STL.y)) / prep_circuit$gp.2
+
+prep_circuit$blocks.prep = ifelse(!is.na(prep_circuit$BLKPG), 
+                                  prep_circuit$BLKPG,
+                                  ifelse(!is.na(prep_circuit$BLKPG.x), 
+                                         prep_circuit$BLKPG.x,
+                                         prep_circuit$BLKPG.y))
+
+prep_circuit$fg.prep = ifelse(!is.na(prep_circuit$`FG%`),
+                               prep_circuit$`FG%`,
+                               ifelse(!is.na(prep_circuit$`FG%.x`),
+                                      prep_circuit$`FG%.x`,
+                                      prep_circuit$`FG%.y`))
+
+prep_circuit$ft.prep = ifelse(!is.na(prep_circuit$`FT%`),
+                              prep_circuit$`FT%`,
+                              ifelse(!is.na(prep_circuit$`FT%.x`),
+                                     prep_circuit$`FT%.x`,
+                                     prep_circuit$`FT%.y`))
+
+prep_circuit$fgm.prep = ifelse(!is.na(prep_circuit$`FGM`),
+                              prep_circuit$`FGM`,
+                              ifelse(!is.na(prep_circuit$`FGM.x`),
+                                     prep_circuit$`FGM.x`,
+                                     prep_circuit$`FGM.y`))
+
+prep_circuit$threes.prep = ifelse(!is.na(prep_circuit$`3P%`),
+                               prep_circuit$`3P%`,
+                               ifelse(!is.na(prep_circuit$`3P%.x`),
+                                      prep_circuit$`3P%.x`,
+                                      prep_circuit$`3P%.y`))
+prep_circuit$mp.prep = ifelse(!is.na(prep_circuit$`MPG`),
+                                  prep_circuit$`MPG`,
+                                  ifelse(!is.na(prep_circuit$`MPG.x`),
+                                         prep_circuit$`MPG.x`,
+                                         prep_circuit$`MPG.y`))
+
+prep_circuit$tov.prep = ifelse(!is.na(prep_circuit$`TOPG`),
+                              prep_circuit$`TOPG`,
+                              ifelse(!is.na(prep_circuit$`TOPG.x`),
+                                     prep_circuit$`TOPG.x`,
+                                     prep_circuit$`TOPG.y`))
+
+prep_circuit$high.prep = ifelse(!is.na(prep_circuit$`High`),
+                               prep_circuit$`High`,
+                               ifelse(!is.na(prep_circuit$`High.x`),
+                                      prep_circuit$`High.x`,
+                                      prep_circuit$`High.y`))
+
+prep_circuit$pf.prep = ifelse(!is.na(prep_circuit$`PFPG`),
+                                prep_circuit$`PFPG`,
+                                ifelse(!is.na(prep_circuit$`PFPG.x`),
+                                       prep_circuit$`PFPG.x`,
+                                       prep_circuit$`PFPG.y`))
+
+
+prep_circuit = prep_circuit %>% dplyr::select(Name, ppg.prep,
+                                              blocks.prep, 
+                                              ast.prep,
+                                              pf.prep,
+                                              steals.prep,
+                                              tov.prep,
+                                              reb.prep,
+                                              reb.prep,
+                                              fg.prep, 
+                                              ft.prep,
+                                              gp.2,
+                                              threes.prep,
+                                              high.prep,
+                                              mp.prep)
+colnames(prep_circuit)[2]  = 'ppg.prep'
+data = left_join(x = data, y = prep_circuit, by = c('Name'))
+
+
+data = data %>% dplyr::select(Name, ws, ws_per_40,
+                              Position_1,
+                              ppg.prep,
+                              blocks.prep,
+                              tov.prep,
+                              fg.prep,
+                              mp.prep)
+
+# school.table = as.data.frame(table(data$High.School))
+# colnames(school.table)[1] = 'High.School'
+# colnames(school.table)[2] = 'Category'
+# 
+# data = left_join(data, school.table, by = 'High.School')
+# 
+# 
+# data$prep = ifelse(data$Category > 2, data$High.School, 'solo')
+# 
+# data$Category = as.factor(data$Category)
+# 
+# data$pounds.inch = data$Weight / data$fixed.height
+
+
+# summary = data %>% group_by(High.School) %>% summarise(height = mean(espn.rating), freq = n())
+# summary
+#plot(x = summary$freq, y = summary$height)
+
+knn.impute <- preProcess(data, method=c("center", "scale"))
+
+library(RANN)  # required for knnInpute
+data <- predict(knn.impute, newdata = data)
+
+knn.impute <- preProcess(data, method=c("knnImpute"))
+
+data <- predict(knn.impute, newdata = data)
+
+
+library(MASS)
+
+library(kernlab)
+
+data$Position_1 = as.factor(data$Position_1)
+
+
+
+
+
+set.seed(123)
+
+train_ind <- createDataPartition(y = data$ws, p = .8, list = F)
+
+train <- data[train_ind, ]
+test <- data[-train_ind, ]
+
+
+featurePlot(x=train[,c(
+  "maxpreps.pts",
+  "ppg.prep"
+  )], y = train$ws, plot = 'pairs')
+
+
+# I(Position_1*(Height+Weight)) + 
+#   I(Position_1*Height*Weight)) + 
+ws.formula = as.formula('ws_per_40  ~ 
+                        ppg.prep  + fg.prep + 
+mp.prep + blocks.prep')
+
+#maybe I(blocks.prep*mp.prep), Position_1*ppg.prep
+# lm.model = train(form = ws.formula,
+#                  data = train, method = 'lmStepAIC', trControl =  trainControl(method = "cv",
+#                                             number = 40))
+
+
+set.seed(10001)
+fitControl <- trainControl(
+  method = 'repeatedcv',                   # k-fold cross validation
+  number = 21,  
+  
+  repeats = 3,                      # number of folds
+  savePredictions = T       # saves predictions for optimal tuning parameter
+) 
+
+
+
+
+
+library(caretEnsemble)
+
+
+algorithmList <- c('rf',
+                   'earth',
+                   'svmPoly',
+                   'brnn'
+                   )
+
+set.seed(100)
+models <- caretList(form = ws.formula, data=train, trControl=fitControl, methodList=algorithmList) 
+results <- resamples(models)
+summary(results)
+
+
+set.seed(10001)
+stackControl <- trainControl(
+  method = 'repeatedcv',                   # k-fold cross validation
+  number = 21,  
+  
+  repeats = 3,                      # number of folds
+  savePredictions = T       # saves predictions for optimal tuning parameter
+) 
+
+stack.glm <- caretStack(models, 
+                        method = "glm", 
+                        trControl=stackControl) 
+
+
+
+#predict WAR values using your model
+pred <- predict(stack.glm, test)
+
+
+#compute the residuals
+error <- test$ws_per_40 - pred
+
+
+#compute the root mean squared error
+rmse_error <- mean(sqrt((error^2)))
+
+#print the root mean squared error
+print(rmse_error)
+
+
+
+ggplot() + 
+  
+  #select type of plot (such as bar graph, histogram, etc.). set x and y = to your variables
+
+  geom_text(aes(x = pred, y = test$ws_per_40, label=test$Name),hjust=0, vjust=0) + 
+    #draw line of best fit through the points
+  geom_smooth(mapping = aes(x = pred, y = test$ws_per_40), method = 'lm', se = F) + 
+  
+  #set plot title and subtitles
+  labs(title = 'Actual Values Versus Fitted Values', 
+       subtitle = paste('RMSE = ', round(rmse_error, 2), sep = '')) + 
+  
+  #set x axis title
+  xlab(label = 'Fitted Values') + 
+  
+  #set y axis title
+  ylab(label = 'Actual Values')
+

@@ -80,7 +80,7 @@ other.table = team.stat.tables[[e]]
 other.table = other.table[,2:ncol(other.table)]
 
 
-  finish = full_join(x = finish, y = other.table,
+  finish = merge(x = finish, y = other.table,
                      by = 'Name')
   
   #print(finish)
@@ -120,5 +120,5 @@ players = finish
 
 
 
-#write.csv(badlinks, file = 'prep.circuit.badlinks.csv', row.names = FALSE)
+write.csv(badlinks, file = 'prep.circuit.stats-16-17.2.csv', row.names = FALSE)
 
