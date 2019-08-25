@@ -1,4 +1,2 @@
 # Recruiting Project #
-I am attempting to predict college basketball performance based on recruiting data and high school statistics.
-This project will be my senior honors thesis sponsored by Dr. Mario Giacomazzo.
-I am planning on submitting my paper in competitions such as the Sloan Sports Analytics Conference research competition in 2020.
+This project will be my senior honors thesis sponsored by Dr. Mario Giacomazzo. This project began in the Spring of 2019. The inputs for the preliminary models were ESPN ratings and regular season high school statistics by Prep Circuit. Improvements to this project will come through incorporating AAU Statistics and more advanced statistical methods. I am planning on submitting my paper in competitions such as the Sloan Sports Analytics Conference research competition in 2020.
