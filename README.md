@@ -1,2 +1,0 @@
-# Recruiting Project #
-This project will be my senior honors thesis sponsored by Dr. Mario Giacomazzo. The preliminary models created in the spring of 2019 used ESPN ratings and Prep Circuit high school statistics as the inputs. Improvements to this project will come through incorporating AAU statistics and more advanced statistical methods. I am planning on submitting my paper in competitions such as the Sloan Sports Analytics Conference research competition in 2020.
